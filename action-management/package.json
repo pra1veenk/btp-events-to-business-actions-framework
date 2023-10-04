@@ -74,6 +74,12 @@
       },
       "db": {
         "kind": "hana-cloud"
+      },
+      "E2BGENAILLMACCESSSERVICE": {
+        "kind": "rest",
+        "credentials": {
+            "destination": "e2b-genai"
+        }
       }
     },
     "features": {

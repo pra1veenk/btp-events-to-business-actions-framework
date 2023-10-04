@@ -167,6 +167,11 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            Name: e2b-genai
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://test-app.hana.ondemand.com
           existing_destinations_policy: update
       version: 1.0.0
     service: destination

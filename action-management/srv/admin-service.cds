@@ -53,4 +53,9 @@ service AdminService {
     entity LogHeaders           as projection on db.LogHeaders;
     entity LogItems             as projection on db.LogItems;
     function getActionsDefaults() returns Actions;
+    type llmActionData {
+        payload: String;
+        message: String;
+    }
+    action getActionSuggestionsFromLLM(userInput:String) returns llmActionData;
 }

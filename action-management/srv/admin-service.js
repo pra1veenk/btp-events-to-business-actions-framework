@@ -1,6 +1,6 @@
 const cds = require("@sap/cds");
 const destinationUtil = require('./utils/destination');
-
+const llmUtil = require('./utils/llm-management');
 
 module.exports = cds.service.impl(async function (srv) {
 
@@ -92,6 +92,52 @@ module.exports = cds.service.impl(async function (srv) {
 
     srv.on('getActionsDefaults', async () => {
         return { actionCategory_id: 'ROOT', contentType_id: 'JSON', isCsrfTokenNeeded: false };
+    })
+
+    srv.on('getActionSuggestionsFromLLM', async (req) => {
+        try{
+                const query = req.data.query;
+                console.log("------------------Start of generating topic suggestions-------");
+                //const response = await llmUtil.callLLMService(prompt);
+                const response = {
+                    "payload":{
+                        "PurchaseRequisitionType": "NB",
+                        "PurReqnDescription": "Requisition for pump material",
+                        "to_PurchaseReqnItem": {
+                        "results": [
+                        {
+                        "PurchaseRequisitionItem": "10",
+                        "Material": "PUMP_MATERIAL",
+                        "Plant": "1000",
+                        "RequestedQuantity": "5",
+                        "DeliveryDate": "/Date(1643731200000)/",
+                        "PurchaseRequisitionPrice": "500",
+                        "PurReqnPriceQuantity": "1",
+                        "BaseUnit": "EA"
+                        }
+                        ]
+                        }
+                    },
+                    "apidescription": `In this JSON payload:
+                    - PurchaseRequisitionType is the document type for the purchase requisition. "NB" stands for Purchase Requisition.
+                    - PurReqnDescription is the description of the purchase requisition.
+                    - to_PurchaseReqnItem is an array of items in the purchase requisition. Each item is an object with the following
+                    properties:
+                    - PurchaseRequisitionItem is the item number of the purchase requisition.
+                    - Material is the material number. In this case, it's "PUMP_MATERIAL".
+                    - Plant is the plant where the material is required.
+                    - RequestedQuantity is the quantity of the material required.
+                    - DeliveryDate is the required delivery date of the material. The date is in Unix timestamp format.
+                    - PurchaseRequisitionPrice is the price of the material in the purchase requisition.
+                    - PurReqnPriceQuantity is the quantity for which the price is applicable.
+                    - BaseUnit is the unit of measure for the material. "EA" stands for Each.`
+                }
+                console.log("------------------End of generating topic suggestions------- response is : "+response);
+                return response;
+        } catch(err){
+            console.log("Error occured while generating suggestions from LLM"+err);
+            req.reject(500, "Error occured while generating suggestions from LLM. Please try again after sometime.");
+        }
     })
 
 })

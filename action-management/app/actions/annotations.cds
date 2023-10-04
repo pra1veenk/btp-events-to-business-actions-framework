@@ -98,6 +98,11 @@ annotate service.Actions with @(
                 Value : type_ID,
                 Label : 'Action Type',
             },
+            {
+                $Type : 'UI.DataFieldForAction',
+                Action : 'AdminService.EntityContainer/getActionSuggestionsFromLLM',
+                Label : 'Suggest Payload',
+            },
         ],
     },
     UI.Facets                      : [
