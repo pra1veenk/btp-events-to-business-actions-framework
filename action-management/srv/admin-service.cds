@@ -13,6 +13,10 @@ service AdminService {
     entity Actions               as projection on db.Actions actions {
         action getUrlByDestination()         returns Actions;
         action getRelatedActionsVisibility() returns Boolean;
+        
+        @(  cds.odata.bindingparameter.name: '_it',
+            Common.SideEffects #SuggestPayloadLLM: { TargetProperties: [ '_it/payload', '_it/apidescription' ] } )
+        action getActionSuggestionsFromLLM(userInput:String) returns llmActionData;
     };
 
     entity prepostActions       as projection on db.prepostActions;
@@ -57,5 +61,5 @@ service AdminService {
         payload: String;
         message: String;
     }
-    action getActionSuggestionsFromLLM(userInput:String) returns llmActionData;
+    // action getActionSuggestionsFromLLM(userInput:String) returns llmActionData;
 }

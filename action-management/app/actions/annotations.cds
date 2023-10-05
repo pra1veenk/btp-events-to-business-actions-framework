@@ -80,16 +80,6 @@ annotate service.Actions with @(
         Data  : [
             {
                 $Type : 'UI.DataField',
-                Label : 'Action Name',
-                Value : name,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Description',
-                Value : descr,
-            },
-            {
-                $Type : 'UI.DataField',
                 Value : actionCategory_id,
                 Label : 'Category',
             },
@@ -99,9 +89,14 @@ annotate service.Actions with @(
                 Label : 'Action Type',
             },
             {
-                $Type : 'UI.DataFieldForAction',
-                Action : 'AdminService.EntityContainer/getActionSuggestionsFromLLM',
-                Label : 'Suggest Payload',
+                $Type : 'UI.DataField',
+                Label : 'Action Name',
+                Value : name,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Description',
+                Value : descr,
             },
         ],
     },
@@ -112,11 +107,29 @@ annotate service.Actions with @(
             Label  : 'Basic Information',
             Target : '@UI.FieldGroup#GeneratedGroup1',
         },
+        // {
+        //     $Type : 'UI.ReferenceFacet',
+        //     Label : 'HTTP Information',
+        //     ID : 'HTTPInformation',
+        //     Target : '@UI.FieldGroup#HTTPInformation',
+        // },
         {
-            $Type : 'UI.ReferenceFacet',
+            $Type : 'UI.CollectionFacet',
             Label : 'HTTP Information',
-            ID : 'HTTPInformation',
-            Target : '@UI.FieldGroup#HTTPInformation',
+            ID : 'HTTPInformation1',
+            Facets : [
+                {
+                    $Type : 'UI.ReferenceFacet',
+                    Label : 'Details',
+                    ID : 'Details',
+                    Target : '@UI.FieldGroup#Details',
+                },
+                {
+                    $Type : 'UI.ReferenceFacet',
+                    Label : 'Payload',
+                    ID : 'Payload',
+                    Target : '@UI.FieldGroup#Payload',
+                },],
         },
         {
             $Type  : 'UI.ReferenceFacet',
@@ -409,48 +422,7 @@ annotate service.Actions with {
 annotate service.Actions with @(
     UI.FieldGroup #HTTPInformation : {
         $Type : 'UI.FieldGroupType',
-        Data : [
-            {
-                $Type : 'UI.DataField',
-                Label : 'Destination',
-                Value : dest,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'URL',
-                Value : url,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Content Type',
-                Value : contentType_id,
-            },
-            {
-                $Type : 'UI.DataField',
-                Value : method_ID,
-                Label : 'Method',
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Relative Path',
-                Value : path,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Payload',
-                Value : payload,
-            },
-            {
-                $Type : 'UI.DataField',
-                Value : defaultActionIdPath,
-                Label : 'Action Id Path in Response',
-                ![@UI.Hidden] : hideDefaultActionIdPath
-            },
-            {
-                $Type : 'UI.DataField',
-                Value : isCsrfTokenNeeded,
-                Label : 'Is Csrf Token Needed?',
-            },],
+        Data : [],
     }
 );
 annotate service.Actions with {
@@ -482,3 +454,76 @@ annotate service.ActionCategories with {
 annotate service.Actions with {
     actionCategory @Common.FieldControl : #Mandatory
 };
+
+annotate service.Actions with {
+    apidescription @UI.MultiLineText : true
+};
+annotate service.Actions with {
+    descr @UI.MultiLineText : true
+};
+annotate service.Actions with @(
+    UI.FieldGroup #Details : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : method_ID,
+                Label : 'Method',
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Destination',
+                Value : dest,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'URL',
+                Value : url,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Relative Path',
+                Value : path,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Content Type',
+                Value : contentType_id,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : isCsrfTokenNeeded,
+                Label : 'Is Csrf Token Needed?',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : defaultActionIdPath,
+                Label : 'Action Id Path in Response',
+                ![@UI.Hidden] : hideDefaultActionIdPath,
+            },],
+    }
+);
+annotate service.Actions with @(
+    UI.FieldGroup #Payload : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Label : 'Payload',
+                Value : payload,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : apidescription,
+                Label : 'apidescription',
+            },
+            {
+                $Type : 'UI.DataFieldForAction',
+                Action : 'AdminService.getActionSuggestionsFromLLM',
+                Label : 'Suggest Payload',
+                                Criticality : #Positive,
+                CriticalityRepresentation : #WithIcon,
+                ![@UI.Hidden]     : {$edmJson: {$If: [{$Eq: [{$Path: 'IsActiveEntity'},true ]},true,false]}}
+            }],
+    }
+);

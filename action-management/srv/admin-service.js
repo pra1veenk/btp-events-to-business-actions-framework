@@ -1,5 +1,6 @@
 const cds = require("@sap/cds");
 const destinationUtil = require('./utils/destination');
+// eslint-disable-next-line no-unused-vars
 const llmUtil = require('./utils/llm-management');
 
 module.exports = cds.service.impl(async function (srv) {
@@ -94,9 +95,11 @@ module.exports = cds.service.impl(async function (srv) {
         return { actionCategory_id: 'ROOT', contentType_id: 'JSON', isCsrfTokenNeeded: false };
     })
 
-    srv.on('getActionSuggestionsFromLLM', async (req) => {
+    srv.on('getActionSuggestionsFromLLM',Actions, async (req) => {
         try{
-                const query = req.data.query;
+                const action_uuid = req.getUriInfo()._pathSegments[0]._keyPredicates[0]._value;
+                const userInput = req.data.userInput;
+                console.log('user input: '+userInput);
                 console.log("------------------Start of generating topic suggestions-------");
                 //const response = await llmUtil.callLLMService(prompt);
                 const response = {
@@ -133,6 +136,8 @@ module.exports = cds.service.impl(async function (srv) {
                     - BaseUnit is the unit of measure for the material. "EA" stands for Each.`
                 }
                 console.log("------------------End of generating topic suggestions------- response is : "+response);
+                const  result = await UPDATE.entity(Actions.drafts, action_uuid).set({payload:JSON.stringify(response.payload),apidescription: response.apidescription});
+                console.log(result);
                 return response;
         } catch(err){
             console.log("Error occured while generating suggestions from LLM"+err);
