@@ -71,7 +71,8 @@ annotate service.Actions with @(UI.LineItem : [
         Value : payload,
         Label : 'Payload',
         ![@UI.Importance] : #Low,
-    },
+    }
+
 ]);
 
 annotate service.Actions with @(

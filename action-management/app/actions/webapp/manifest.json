@@ -143,6 +143,20 @@
                             },
                             "hideFilterBar": false,
                             "initialLoad": "Enabled",
+                            "content": {
+                                "header": {
+                                    "anchorBarVisible": false,
+                                    "visible": true,
+                                    "actions": {
+                                        "UploadFilesList": {
+                                            "id": "createActionsusingLLM",
+                                            "text": "Create Actions using LLM",
+                                            "press": "sap.paa.action.mgmt.ui.actions.custom.LLMActionsExtController.showLLMSuggestionsDialog",
+                                            "requiresSelection": false
+                                        }
+                                    }
+                                }
+                            },
                             "controlConfiguration": {
                                 "@com.sap.vocabularies.UI.v1.LineItem": {
                                     "tableSettings": {

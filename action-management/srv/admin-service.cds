@@ -19,7 +19,8 @@ service AdminService {
     entity NonQueueActions      as projection on db.Actions where actionCategory.id = 'CHILD';
     entity Destinations         as projection on db.Destinations;
     entity LogStatuses          as projection on db.LogStatuses;
-
+    action getActionSuggestionsFromLLM1(userInput:String) returns String;
+    action createActions(actionsInput:String) returns String;
     entity ActionDetails        as
         select from Actions {
             ID,
@@ -53,4 +54,5 @@ service AdminService {
     entity LogHeaders           as projection on db.LogHeaders;
     entity LogItems             as projection on db.LogItems;
     function getActionsDefaults() returns Actions;
+    
 }

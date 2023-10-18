@@ -1,0 +1,33 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns="sap.m" id="idPPExtView">
+    <Dialog id="idLLMActionsDialog" title="Enter information related to actions that you want to generate" 
+        class="sapUiResponsiveContentPadding" beforeOpen=".onBeforeOpen" afterClose=".onAfterClose"
+        contentHeight="90%" contentWidth="70%" xmlns:f="sap.f">
+        <content>
+            <VBox id="idTopicVBox" >
+                <TextArea id="idTextArea" rows="4" width="100%">
+
+                </TextArea>
+                <Button id="idLLMActionsButton" text="Get Actions From LLM" press=".onGetActionsFromLLM" type="Emphasized" enabled="true" />
+                <f:FlexibleColumnLayout
+                    id="flexibleColumnLayout"
+                    stateChange=".onStateChanged"
+                    backgroundDesign="Solid"
+                    layout="{/layout}" visible="false">
+
+                </f:FlexibleColumnLayout>
+            </VBox>
+            <VBox id="idActionsHBox" binding="{/getActionSuggestionsFromLLM1(...)}"  width="100%">
+                <TextArea id="idTextAreaActions" rows="10" width="100%" visible="false">
+
+                </TextArea>
+            </VBox>
+            <VBox id="idDummyCreateActions" binding="{/createActions(...)}"/>
+        </content>
+        <beginButton>
+            <Button id="ok" text="Create Actions" press=".oncreateActions" type="Emphasized" enabled="true" />
+        </beginButton>
+        <endButton>
+            <Button id="cancel" text="Cancel" press=".onClose" type="Emphasized" enabled="true" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

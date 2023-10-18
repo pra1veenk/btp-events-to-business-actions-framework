@@ -1,21 +1,11 @@
 const cds = require("@sap/cds");
-const https = require('https');
 const destinationUtil = require('./utils/destination');
-// const businessRulesUtil = require('./utils/businessrules');
-const actionUtil = require('./utils/action');
-const logUtil = require('./utils/logger');
-const action = require("./utils/action");
+// eslint-disable-next-line no-unused-vars
+const llmUtil = require('./utils/llm-management');
 
 module.exports = cds.service.impl(async function (srv) {
 
     const { Destinations, Actions, Types, LogStatuses } = this.entities;
-    const emMessaging = await cds.connect.to("messaging");
-    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-
-    emMessaging.on('com/sap/paa/industry/event/raised', async (eventMessage) => {
-        await actionUtil.convertEventToBusinessAction(eventMessage, httpsAgent);
-    })
-
 
     srv.on('READ', Destinations, async (req) => {
         try {
@@ -96,7 +86,7 @@ module.exports = cds.service.impl(async function (srv) {
     })
 
     srv.on('postEvent', async (req) => {
-        console.log('event re4ceived from advanced event mesh');
+        console.log('event received from advanced event mesh');
         console.log(req);
         console.log(req.data);
     })
@@ -104,5 +94,122 @@ module.exports = cds.service.impl(async function (srv) {
     srv.on('getActionsDefaults', async () => {
         return { actionCategory_id: 'ROOT', contentType_id: 'JSON', isCsrfTokenNeeded: false };
     })
+
+    srv.on('getActionSuggestionsFromLLM1', async (req) => {
+        try{
+                const userInput = req.data.userInput;
+                console.log('user input: '+userInput);
+                console.log("------------------Start of generating topic suggestions-------");
+                //const response = await llmUtil.callLLMService(prompt);
+                const response = {
+                    "MAIN": {
+                        "Action_Payload": 
+                        {  
+                            "PurchaseRequisitionType": "NB",  
+                            "PurReqnDescription": "Purchase Requisition for Pump Material",  
+                            "to_PurchaseReqnItem": [    {      
+                                "PurchaseRequisitionItemText": "Pump Material",      
+                                "Material": "PUMP_MAT",      
+                                "Plant": "1000",      
+                                "Quantity": 2,      
+                                "DeliveryDate": "2022-12-31"    
+                            }  ]
+                        },
+                        "Field_Description": "create pr description of fields",
+                        "Action_Type": "POST",
+                        "Relative_Path": "/A_PurchaseRequisition",
+                        "Suggested_Action_Name": "Create_Purchase_Requisition"
+                    },
+                    "POST": {
+                        "Action_Payload": 
+                        {  
+                            "PurchaseRequisitionType": "NB",  
+                            "PurReqnDescription": "Purchase Requisition for Pump Material",  
+                            "to_PurchaseReqnItem": [    {      
+                                "PurchaseRequisitionItemText": "Pump Material",      
+                                "Material": "PUMP_MAT",      
+                                "Plant": "1000",      
+                                "Quantity": 2,      
+                                "DeliveryDate": "2022-12-31"    
+                            }  ]
+                        },
+                        "Field_Description": "create pr description of fields",
+                        "Action_Type": "POST",
+                        "Relative_Path": "/A_PurchaseRequisition",
+                        "Suggested_Action_Name": "Create_Purchase_Requisition"
+                    },
+                    "PRE": {
+                        "Action_Payload": 
+                        {  
+                            "PurchaseRequisitionType": "NB",  
+                            "PurReqnDescription": "Purchase Requisition for Pump Material",  
+                            "to_PurchaseReqnItem": [    {      
+                                "PurchaseRequisitionItemText": "Pump Material",      
+                                "Material": "PUMP_MAT",      
+                                "Plant": "1000",      
+                                "Quantity": 2,      
+                                "DeliveryDate": "2022-12-31"    
+                            }  ]
+                        },
+                        "Field_Description": "create pr description of fields",
+                        "Action_Type": "POST",
+                        "Relative_Path": "/A_PurchaseRequisition",
+                        "Suggested_Action_Name": "Create_Purchase_Requisition"
+                    }
+                }
+                    
+                console.log("------------------End of generating topic suggestions------- response is : "+response);
+                return JSON.stringify(response);
+        } catch(err){
+            console.log("Error occured while generating suggestions from LLM"+err);
+            req.reject(500, "Error occured while generating suggestions from LLM. Please try again after sometime.");
+        }
+    })
+
+    //method to create action and return action id
+    async function createAction(action, actionType){
+        //post id 4eaa8eda-1329-4cb8-8d19-174c2e06cd3f get this dymanically and use for creation
+        const methodId = "4eaa8eda-1329-4cb8-8d19-174c2e06cd3f"
+        const response = await INSERT.into(Actions).entries({
+            "name": action["Suggested_Action_Name"],
+            "descr": action["Suggested_Action_Name"],
+            "path": action["Relative_Path"],
+            "method_ID": methodId,
+            "payload": JSON.stringify(action.payload),
+            "contentType_id": "JSON",
+            "actionCategory_id": actionType,
+            "isCsrfTokenNeeded": true,
+            "apidescription": action["Field_Description"]
+        });
+        console.log(response);
+    }
+
+    srv.on('createActions', async (req) => {
+        try{
+            const actionsInput = req.data.actionsInput;
+            const actions = JSON.parse(actionsInput);
+            //get and create pre action if exists
+            const preAction = actions["PRE"];
+            if ("Action_Payload" in preAction){
+                let response = await createAction(preAction,"CHILD");
+            }
+            //create main action
+            const mainAction = actions["MAIN"];
+            if ("Action_Payload" in mainAction){
+                let response = await createAction(mainAction,"ROOT");
+            }
+            //create post action if exists
+            const postAction = actions["POST"];
+            if ("Action_Payload" in postAction){
+                let response = await createAction(postAction,"CHILD");
+            }
+            return "Actions created successfully."
+        } catch(err){
+            console.log("Error occured while creating actions"+err);
+            req.reject(500, "Error occured while creating actions. Please try again after sometime.");
+        }
+        
+    })
+    
 
 })
