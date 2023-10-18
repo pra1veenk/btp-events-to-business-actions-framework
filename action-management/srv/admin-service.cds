@@ -10,7 +10,7 @@ service AdminService {
     entity ActionCategories     as projection on db.ActionCategories;
 
     @cds.redirection.target : true
-    entity Actions               as projection on db.Actions actions {
+    entity Actions               as projection on db.Actions order by createdAt desc actions {
         action getUrlByDestination()         returns Actions;
         action getRelatedActionsVisibility() returns Boolean;
     };

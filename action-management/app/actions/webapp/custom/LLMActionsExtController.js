@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 sap.ui.define(["sap/m/MessageBox", "sap/m/MessageToast",  "sap/ui/model/json/JSONModel"], 
 function (MessageBox, MessageToast, JSONModel){
-    bFragmentLoaded=false;
+    let bFragmentLoaded=false;
     "use strict";
     function _createUploadController(oExtensionAPI) {
         var oUploadDialog;
@@ -88,6 +88,8 @@ function (MessageBox, MessageToast, JSONModel){
                     //oTable.setModel(oTopicModel, "topicsuggestions");
                     //oTable.setBusyIndicatorDelay(0).setBusy(false);
                     console.log(oResults);
+                    oExtensionAPI.refresh();
+                    MessageBox.success("Chain of actions are created successfully. Please check the actions and update information.");
                     oUploadDialog && oUploadDialog.close();
                 }).catch(function(error){
                     let oErrors = new JSONModel({value:[], error_visible: true, error_message:error.message});

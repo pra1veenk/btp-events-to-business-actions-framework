@@ -2,10 +2,11 @@ const cds = require("@sap/cds");
 const destinationUtil = require('./utils/destination');
 // eslint-disable-next-line no-unused-vars
 const llmUtil = require('./utils/llm-management');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = cds.service.impl(async function (srv) {
 
-    const { Destinations, Actions, Types, LogStatuses } = this.entities;
+    const { Destinations, Actions, Types, LogStatuses, prepostActions } = this.entities;
 
     srv.on('READ', Destinations, async (req) => {
         try {
@@ -167,19 +168,33 @@ module.exports = cds.service.impl(async function (srv) {
     })
 
     //method to create action and return action id
-    async function createAction(action, actionType){
+    async function createAction(action, actionType, actionId){
         //post id 4eaa8eda-1329-4cb8-8d19-174c2e06cd3f get this dymanically and use for creation
         const methodId = "4eaa8eda-1329-4cb8-8d19-174c2e06cd3f"
         const response = await INSERT.into(Actions).entries({
+            "ID": actionId,
             "name": action["Suggested_Action_Name"],
-            "descr": action["Suggested_Action_Name"],
+            "descr": "This action is created using LLM "+action["Suggested_Action_Name"],
             "path": action["Relative_Path"],
             "method_ID": methodId,
-            "payload": JSON.stringify(action.payload),
+            "payload": JSON.stringify(action.Action_Payload),
+            "type_ID":"809e3149-0e99-4cb3-8119-a2e840284e88",
             "contentType_id": "JSON",
             "actionCategory_id": actionType,
             "isCsrfTokenNeeded": true,
             "apidescription": action["Field_Description"]
+        });
+        console.log(response);
+    }
+
+    async function chainAction(helperActionType,mainActionId,helperActionId){
+        const helperActionTypeId = helperActionType === "PRE"?"5afa4651-b380-4ece-b668-6b1a27bbc2b0":"6be2eb90-575a-4e28-92d2-53488b49fbf6"
+        const actionMappingId = uuidv4();
+        const response = await INSERT.into(prepostActions).entries({
+            "ID": actionMappingId,
+            "flowType_ID": helperActionTypeId,
+            "rootAction_ID": mainActionId,
+            "action_ID": helperActionId
         });
         console.log(response);
     }
@@ -190,18 +205,32 @@ module.exports = cds.service.impl(async function (srv) {
             const actions = JSON.parse(actionsInput);
             //get and create pre action if exists
             const preAction = actions["PRE"];
+            let preActionId;
+            let mainActionId;
+            let postActionId;
             if ("Action_Payload" in preAction){
-                let response = await createAction(preAction,"CHILD");
+                preActionId = uuidv4();
+                let response = await createAction(preAction,"CHILD",preActionId);
             }
             //create main action
             const mainAction = actions["MAIN"];
             if ("Action_Payload" in mainAction){
-                let response = await createAction(mainAction,"ROOT");
+                mainActionId = uuidv4();
+                let response = await createAction(mainAction,"ROOT",mainActionId);
             }
             //create post action if exists
             const postAction = actions["POST"];
             if ("Action_Payload" in postAction){
-                let response = await createAction(postAction,"CHILD");
+                postActionId = uuidv4();
+                let response = await createAction(postAction,"CHILD",postActionId);
+            }
+            //link pre and post actions to main action if created successfully
+            
+            if(preActionId){
+                let response = await chainAction("PRE",mainActionId,preActionId);
+            }
+            if(postActionId){
+                let response = await chainAction("POST",mainActionId,postActionId);
             }
             return "Actions created successfully."
         } catch(err){

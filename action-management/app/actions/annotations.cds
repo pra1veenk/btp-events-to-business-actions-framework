@@ -71,6 +71,12 @@ annotate service.Actions with @(UI.LineItem : [
         Value : payload,
         Label : 'Payload',
         ![@UI.Importance] : #Low,
+    },
+    {
+        $Type : 'UI.DataField',
+        Value : apidescription,
+        Label : 'Field Description From LLM',
+        ![@UI.Importance] : #Low,
     }
 
 ]);
@@ -253,6 +259,10 @@ annotate service.Actions with {
     payload @UI.MultiLineText : true
 };
 
+annotate service.Actions with {
+    apidescription @UI.MultiLineText : true
+};
+
 annotate service.Actions with @(UI.Identification : []);
 
 annotate service.prepostActions with @(
@@ -373,6 +383,15 @@ annotate service.Actions with @(UI.SelectionPresentationVariant #table1 : {
         SelectOptions : [],
     },
 });
+
+annotate service.Actions with @UI.PresentationVariant : {
+    SortOrder : [
+        {
+            Property : createdAt,
+            Descending : true
+        }
+    ]
+};
 annotate service.Actions with {
     method @(Common.ValueList : {
             $Type : 'Common.ValueListType',
@@ -435,6 +454,11 @@ annotate service.Actions with @(
                 $Type : 'UI.DataField',
                 Label : 'Payload',
                 Value : payload,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Field description from LLM',
+                Value : apidescription,
             },
             {
                 $Type : 'UI.DataField',
