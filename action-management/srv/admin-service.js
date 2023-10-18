@@ -104,61 +104,74 @@ module.exports = cds.service.impl(async function (srv) {
                 //const response = await llmUtil.callLLMService(prompt);
                 const response = {
                     "MAIN": {
-                        "Action_Payload": 
-                        {  
-                            "PurchaseRequisitionType": "NB",  
-                            "PurReqnDescription": "Purchase Requisition for Pump Material",  
-                            "to_PurchaseReqnItem": [    {      
-                                "PurchaseRequisitionItemText": "Pump Material",      
-                                "Material": "PUMP_MAT",      
-                                "Plant": "1000",      
-                                "Quantity": 2,      
-                                "DeliveryDate": "2022-12-31"    
-                            }  ]
+                        "Action_Payload": {
+                            "DeliveryDate": "date",
+                            "Material": "string",
+                            "PurchaseRequisition": "string",
+                            "PurchaseRequisitionItem": "string",
+                            "RequestedQuantity": "number"
                         },
-                        "Field_Description": "create pr description of fields",
                         "Action_Type": "POST",
-                        "Relative_Path": "/A_PurchaseRequisition",
-                        "Suggested_Action_Name": "Create_Purchase_Requisition"
+                        "Field_Description": "This action creates a purchase requisition for a specific material. The purchase requisition number, item number, material, requested quantity, and delivery date are required fields.",
+                        "Relative_Path": "/A_PurchaseRequisitionItem",
+                        "Suggested_Action_Name": "CreatePurchaseRequisitionForPumpMaterial"
                     },
                     "POST": {
                         "Action_Payload": {
+                            "AccountAssignmentCategory": "<account assignment category>",
+                            "AccountAssignmentNumber": "<account assignment number>",
+                            "AccountAssignmentType": "<account assignment type>",
                             "PurchaseRequisition": "<purchase requisition number>",
-                            "PurchaseRequisitionItem": "<item number>",
-                            "d": {
-                                "$ref": "#/components/schemas/API_PURCHASEREQ_PROCESS_SRV.A_PurReqnAcctAssgmtType-update"
-                            }
+                            "PurchaseRequisitionItem": "<item number>"
                         },
                         "Action_Type": "PATCH",
-                        "Field_Description": "PurchaseRequisition: Purchase requisition number. PurchaseRequisitionItem: Item number. d: New property values for the account assignment.",
-                        "Relative_Path": "/A_PurReqnAcctAssgmt(PurchaseRequisition='<purchase requisition number>',PurchaseRequisitionItem='<item number>',SerialNumber='<serial number>')",
-                        "Suggested_Action_Name": "UpdateAccountAssignment"
+                        "Field_Description": "Updates the account assignment details of a particular accounting line of an item in a purchase requisition, using the purchase requisition number, item number, and serial number of the accounting line provided.",
+                        "Relative_Path": "/A_PurchaseRequisitionHeader('<PurchaseRequisition>')/to_PurchaseReqnItem",
+                        "Suggested_Action_Name": "UpdateAccountAssignmentDetails"
                     },
                     "PRE": {
                         "Action_Payload": {
-                            "BaseUnit": "<Base Unit>",
-                            "MaterialBaseQuantity": "<Base Quantity>",
-                            "MatlCompIsMarkedForBackflush": "<True/False>",
-                            "OrderChangeManagementProfile": "<Profile ID>",
-                            "OverDelivToleranceLimit": "<Tolerance Limit>",
-                            "Plant": "<Plant ID>",
-                            "ProdnOrderIsBatchRequired": "<True/False>",
-                            "Product": "<Product ID>",
-                            "ProductProcessingTime": "<Processing Time>",
-                            "ProductProductionQuantityUnit": "<Quantity Unit>",
-                            "ProductionInvtryManagedLoc": "<Inventory Location>",
-                            "ProductionSchedulingProfile": "<Scheduling Profile>",
-                            "ProductionSupervisor": "<Supervisor ID>",
-                            "SetupAndTeardownTime": "<Setup Time>",
-                            "TransitionMatrixProductsGroup": "<Product Group>",
-                            "TransitionTime": "<Transition Time>",
-                            "UnderDelivToleranceLimit": "<Tolerance Limit>",
-                            "UnlimitedOverDelivIsAllowed": "<True/False>"
+                            "AssemblyScrapPercent": 10,
+                            "BaseUnit": "Unit1",
+                            "Currency": "USD",
+                            "DfltStorageLocationExtProcmt": "Location1",
+                            "FixedLotSizeQuantity": 10,
+                            "IsMRPDependentRqmt": true,
+                            "IsMarkedForDeletion": false,
+                            "IsPlannedDeliveryTime": true,
+                            "IsSafetyTime": true,
+                            "IsStorageCosts": true,
+                            "LotSizeIndependentCosts": 10,
+                            "LotSizeRoundingQuantity": 10,
+                            "LotSizingProcedure": "Procedure1",
+                            "MRPArea": "Area1",
+                            "MRPGroup": "Group1",
+                            "MRPPlanningCalendar": "Calendar1",
+                            "MRPResponsible": "Responsible1",
+                            "MRPType": "Type1",
+                            "MaximumLotSizeQuantity": 10,
+                            "MaximumStockQuantity": 10,
+                            "MinimumLotSizeQuantity": 10,
+                            "PerdPrflForSftyTme": "Profile1",
+                            "PlanAndOrderDayDetermination": "Determination1",
+                            "PlannedDeliveryDurationInDays": 10,
+                            "PlanningTimeFence": 10,
+                            "Plant": "Plant1",
+                            "ProcurementSubType": "SubType1",
+                            "Product": "Pump Material",
+                            "RangeOfCvrgPrflCode": "Code1",
+                            "ReorderThresholdQuantity": 10,
+                            "RoundingProfile": "Profile1",
+                            "RqmtQtyRcptTaktTmeInWrkgDays": 10,
+                            "SafetyDuration": 10,
+                            "SafetyStockQuantity": 10,
+                            "SrvcLvl": 10,
+                            "StorageLocation": "Location1"
                         },
                         "Action_Type": "GET",
-                        "Field_Description": "Product: Material Number, Plant: Plant, MaterialBaseQuantity: Base Quantity for the Material, UnlimitedOverDelivIsAllowed: Whether Over Delivery is Allowed or Not, OverDelivToleranceLimit: Tolerance Limit for Over Delivery, UnderDelivToleranceLimit: Tolerance Limit for Under Delivery, ProductionInvtryManagedLoc: Inventory Managed Location, BaseUnit: Base Unit of the Material, ProductProcessingTime: Processing Time for the Product, ProductionSupervisor: Supervisor for the Production, ProductProductionQuantityUnit: Quantity Unit for the Product Production, ProdnOrderIsBatchRequired: Whether Batch is Required for Production Order or Not, TransitionMatrixProductsGroup: Product Group for the Transition Matrix, OrderChangeManagementProfile: Profile for Order Change Management, MatlCompIsMarkedForBackflush: Whether Material Component is Marked for Backflush or Not, SetupAndTeardownTime: Setup and Teardown Time, ProductionSchedulingProfile: Profile for Production Scheduling, TransitionTime: Transition Time",
-                        "Relative_Path": "/A_ProductWorkScheduling(Product='{Product}',Plant='{Plant}')",
-                        "Suggested_Action_Name": "Get_Work_Scheduling_Data"
+                        "Field_Description": "Fetches MRP area data of a product master record by product number, plant and MRP area",
+                        "Relative_Path": "/A_ProductPlantMRPArea(Product='Pump Material',Plant='Plant1',MRPArea='Area1')",
+                        "Suggested_Action_Name": "Fetch_MRP_Area_Data"
                     }
                 }
                     
