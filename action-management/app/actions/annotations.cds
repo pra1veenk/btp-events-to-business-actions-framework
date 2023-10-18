@@ -29,6 +29,9 @@ annotate service.Actions with @(UI.LineItem : [
         Label             : 'Action Name',
         Value             : name,
         ![@UI.Importance] : #High,
+        Criticality: {$edmJson :{$If :[{$Eq :['',{$Path : 'dest'}]}, 1, 9]}},
+        CriticalityRepresentation: #WithoutIcon
+        
     },
     {
         $Type             : 'UI.DataField',

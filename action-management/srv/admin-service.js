@@ -122,40 +122,43 @@ module.exports = cds.service.impl(async function (srv) {
                         "Suggested_Action_Name": "Create_Purchase_Requisition"
                     },
                     "POST": {
-                        "Action_Payload": 
-                        {  
-                            "PurchaseRequisitionType": "NB",  
-                            "PurReqnDescription": "Purchase Requisition for Pump Material",  
-                            "to_PurchaseReqnItem": [    {      
-                                "PurchaseRequisitionItemText": "Pump Material",      
-                                "Material": "PUMP_MAT",      
-                                "Plant": "1000",      
-                                "Quantity": 2,      
-                                "DeliveryDate": "2022-12-31"    
-                            }  ]
+                        "Action_Payload": {
+                            "PurchaseRequisition": "<purchase requisition number>",
+                            "PurchaseRequisitionItem": "<item number>",
+                            "d": {
+                                "$ref": "#/components/schemas/API_PURCHASEREQ_PROCESS_SRV.A_PurReqnAcctAssgmtType-update"
+                            }
                         },
-                        "Field_Description": "create pr description of fields",
-                        "Action_Type": "POST",
-                        "Relative_Path": "/A_PurchaseRequisition",
-                        "Suggested_Action_Name": "Create_Purchase_Requisition"
+                        "Action_Type": "PATCH",
+                        "Field_Description": "PurchaseRequisition: Purchase requisition number. PurchaseRequisitionItem: Item number. d: New property values for the account assignment.",
+                        "Relative_Path": "/A_PurReqnAcctAssgmt(PurchaseRequisition='<purchase requisition number>',PurchaseRequisitionItem='<item number>',SerialNumber='<serial number>')",
+                        "Suggested_Action_Name": "UpdateAccountAssignment"
                     },
                     "PRE": {
-                        "Action_Payload": 
-                        {  
-                            "PurchaseRequisitionType": "NB",  
-                            "PurReqnDescription": "Purchase Requisition for Pump Material",  
-                            "to_PurchaseReqnItem": [    {      
-                                "PurchaseRequisitionItemText": "Pump Material",      
-                                "Material": "PUMP_MAT",      
-                                "Plant": "1000",      
-                                "Quantity": 2,      
-                                "DeliveryDate": "2022-12-31"    
-                            }  ]
+                        "Action_Payload": {
+                            "BaseUnit": "<Base Unit>",
+                            "MaterialBaseQuantity": "<Base Quantity>",
+                            "MatlCompIsMarkedForBackflush": "<True/False>",
+                            "OrderChangeManagementProfile": "<Profile ID>",
+                            "OverDelivToleranceLimit": "<Tolerance Limit>",
+                            "Plant": "<Plant ID>",
+                            "ProdnOrderIsBatchRequired": "<True/False>",
+                            "Product": "<Product ID>",
+                            "ProductProcessingTime": "<Processing Time>",
+                            "ProductProductionQuantityUnit": "<Quantity Unit>",
+                            "ProductionInvtryManagedLoc": "<Inventory Location>",
+                            "ProductionSchedulingProfile": "<Scheduling Profile>",
+                            "ProductionSupervisor": "<Supervisor ID>",
+                            "SetupAndTeardownTime": "<Setup Time>",
+                            "TransitionMatrixProductsGroup": "<Product Group>",
+                            "TransitionTime": "<Transition Time>",
+                            "UnderDelivToleranceLimit": "<Tolerance Limit>",
+                            "UnlimitedOverDelivIsAllowed": "<True/False>"
                         },
-                        "Field_Description": "create pr description of fields",
-                        "Action_Type": "POST",
-                        "Relative_Path": "/A_PurchaseRequisition",
-                        "Suggested_Action_Name": "Create_Purchase_Requisition"
+                        "Action_Type": "GET",
+                        "Field_Description": "Product: Material Number, Plant: Plant, MaterialBaseQuantity: Base Quantity for the Material, UnlimitedOverDelivIsAllowed: Whether Over Delivery is Allowed or Not, OverDelivToleranceLimit: Tolerance Limit for Over Delivery, UnderDelivToleranceLimit: Tolerance Limit for Under Delivery, ProductionInvtryManagedLoc: Inventory Managed Location, BaseUnit: Base Unit of the Material, ProductProcessingTime: Processing Time for the Product, ProductionSupervisor: Supervisor for the Production, ProductProductionQuantityUnit: Quantity Unit for the Product Production, ProdnOrderIsBatchRequired: Whether Batch is Required for Production Order or Not, TransitionMatrixProductsGroup: Product Group for the Transition Matrix, OrderChangeManagementProfile: Profile for Order Change Management, MatlCompIsMarkedForBackflush: Whether Material Component is Marked for Backflush or Not, SetupAndTeardownTime: Setup and Teardown Time, ProductionSchedulingProfile: Profile for Production Scheduling, TransitionTime: Transition Time",
+                        "Relative_Path": "/A_ProductWorkScheduling(Product='{Product}',Plant='{Plant}')",
+                        "Suggested_Action_Name": "Get_Work_Scheduling_Data"
                     }
                 }
                     
@@ -182,7 +185,8 @@ module.exports = cds.service.impl(async function (srv) {
             "contentType_id": "JSON",
             "actionCategory_id": actionType,
             "isCsrfTokenNeeded": true,
-            "apidescription": action["Field_Description"]
+            "apidescription": action["Field_Description"],
+            "dest":""
         });
         console.log(response);
     }
