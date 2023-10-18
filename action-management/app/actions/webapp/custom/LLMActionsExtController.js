@@ -43,12 +43,6 @@ function (MessageBox, MessageToast, JSONModel){
                 // }
             },
 
-            onAfterClose: function (oEvent) {
-                // oExtensionAPI.removeDependent(oUploadDialog);
-                // oUploadDialog.destroy();
-                // oUploadDialog = undefined;
-            },
-
             onTopicOk: function (oEvent) {
                 oUploadDialog && oUploadDialog.close();
             },
@@ -94,11 +88,21 @@ function (MessageBox, MessageToast, JSONModel){
                     //oTable.setModel(oTopicModel, "topicsuggestions");
                     //oTable.setBusyIndicatorDelay(0).setBusy(false);
                     console.log(oResults);
+                    oUploadDialog && oUploadDialog.close();
                 }).catch(function(error){
                     let oErrors = new JSONModel({value:[], error_visible: true, error_message:error.message});
                     console.log(oErrors);
+                    oUploadDialog && oUploadDialog.close();
                 })
                 
+            },
+            onClose: function(oEvent) {
+                oUploadDialog && oUploadDialog.close();
+            },
+            onAfterClose: function (oEvent) {
+                oExtensionAPI.removeDependent(oUploadDialog);
+                oUploadDialog.destroy();
+                oUploadDialog = undefined;
             }
         };
     }
