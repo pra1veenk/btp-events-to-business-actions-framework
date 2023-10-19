@@ -3,6 +3,7 @@ const destinationUtil = require('./utils/destination');
 // eslint-disable-next-line no-unused-vars
 const llmUtil = require('./utils/llm-management');
 const { v4: uuidv4 } = require('uuid');
+const { setTimeout } = require("timers/promises");
 
 module.exports = cds.service.impl(async function (srv) {
 
@@ -101,7 +102,8 @@ module.exports = cds.service.impl(async function (srv) {
                 const userInput = req.data.userInput;
                 console.log('user input: '+userInput);
                 console.log("------------------Start of generating topic suggestions-------");
-                //const response = await llmUtil.callLLMService(prompt);
+                //const response = await llmUtil.callLLMService(userInput);
+                await setTimeout(5 * 1000);
                 const response = {
                     "MAIN": {
                         "Action_Payload": {
@@ -124,7 +126,7 @@ module.exports = cds.service.impl(async function (srv) {
                             "PurchaseRequisition": "<purchase requisition number>",
                             "PurchaseRequisitionItem": "<item number>"
                         },
-                        "Action_Type": "PATCH",
+                        "Action_Type": "POST",
                         "Field_Description": "Updates the account assignment details of a particular accounting line of an item in a purchase requisition, using the purchase requisition number, item number, and serial number of the accounting line provided.",
                         "Relative_Path": "/A_PurchaseRequisitionHeader('<PurchaseRequisition>')/to_PurchaseReqnItem",
                         "Suggested_Action_Name": "UpdateAccountAssignmentDetails"
@@ -168,7 +170,7 @@ module.exports = cds.service.impl(async function (srv) {
                             "SrvcLvl": 10,
                             "StorageLocation": "Location1"
                         },
-                        "Action_Type": "GET",
+                        "Action_Type": "POST",
                         "Field_Description": "Fetches MRP area data of a product master record by product number, plant and MRP area",
                         "Relative_Path": "/A_ProductPlantMRPArea(Product='Pump Material',Plant='Plant1',MRPArea='Area1')",
                         "Suggested_Action_Name": "Fetch_MRP_Area_Data"

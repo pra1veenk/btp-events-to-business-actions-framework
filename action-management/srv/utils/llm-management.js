@@ -37,7 +37,7 @@ async function callLLMService(prompt){
         // @ts-ignore
         const response = await llmAccessService.send({
             // @ts-ignore
-            query: "POST /getInfoFromLLM",
+            query: "POST getInfoFromLLM",
             data: payload
         });
         return JSON.parse(response);

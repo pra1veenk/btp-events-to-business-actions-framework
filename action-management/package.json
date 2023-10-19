@@ -17,6 +17,7 @@
     "express": "^4",
     "hdb": "^0.19.0",
     "passport": "^0",
+    "timers": "^0.1.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -75,8 +76,12 @@
       "db": {
         "kind": "hana-cloud"
       },
-      "messaging": {
-        "kind": "enterprise-messaging-shared"
+      "E2BGENAILLMACCESSSERVICE": {
+        "kind": "rest",
+        "credentials": {
+          "destination": "e2b-genai-llm-access-service",
+          "path": "/"
+        }
       }
     },
     "features": {

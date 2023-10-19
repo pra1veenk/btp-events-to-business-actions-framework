@@ -132,7 +132,7 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
                     //oTable.setBusyIndicatorDelay(0).setBusy(false);
                     console.log(oResults);
                     oExtensionAPI.refresh();
-                    MessageBox.success("Chain of actions are created successfully. Please check the actions and update information.");
+                    MessageBox.success("Sequence of chained actions for the proposed tasks got created successfully, do update the system/destination information to make it operational");
                     that.oDialog.setBusy(false);
                     oUploadDialog && oUploadDialog.close();
                 }).catch(function(error){
