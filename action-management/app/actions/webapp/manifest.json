@@ -105,7 +105,11 @@
             }
         },
         "resources": {
-            "css": []
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
         },
         "routing": {
             "routes": [
@@ -152,13 +156,21 @@
                                             "id": "createActionsusingLLM",
                                             "text": "Create Actions using LLM",
                                             "press": "sap.paa.action.mgmt.ui.actions.custom.LLMActionsExtController.showLLMSuggestionsDialog",
-                                            "requiresSelection": false
+                                            "requiresSelection": false,
+                                            "visible": false
                                         }
                                     }
                                 }
                             },
                             "controlConfiguration": {
                                 "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "actions": {
+                                        "CustomActionLLM": {
+                                            "press": "sap.paa.action.mgmt.ui.actions.custom.LLMActionsExtController.showLLMSuggestionsDialog",
+                                            "visible": true,
+                                            "text": "Create Actions using LLM"
+                                        }
+                                    },
                                     "tableSettings": {
                                         "type": "ResponsiveTable",
                                         "creationMode": {
@@ -211,6 +223,26 @@
                             },
                             "sectionLayout": "Tabs",
                             "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.FieldGroup#HTTPInformation": {
+                                    "fields": {
+                                        "DataField::payload": {
+                                            "formatOptions": {                                         
+                                                "textLinesEdit": "10",
+                                                "textMaxLines": "10",
+                                                "textMaxCharactersDisplay": "500",
+                                                "textExpandBehaviorDisplay" : "Popover"
+                                            }
+                                        },
+                                        "DataField::apidescription": {
+                                            "formatOptions": {                                         
+                                                "textLinesEdit": "10",
+                                                "textMaxLines": "10",
+                                                "textMaxCharactersDisplay": "500",
+                                                "textExpandBehaviorDisplay" : "Popover"
+                                            }
+                                        }
+                                    }
+                                },
                                 "childActions/@com.sap.vocabularies.UI.v1.LineItem#ChildActions": {
                                     "tableSettings": {
                                         "enableExport": true,
@@ -263,6 +295,11 @@
                         }
                     }
                 }
+            }
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {}
             }
         }
     },

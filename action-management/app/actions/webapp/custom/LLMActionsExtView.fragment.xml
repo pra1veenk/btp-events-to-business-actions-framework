@@ -1,28 +1,19 @@
-<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns="sap.m" id="idPPExtView" xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt">
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns="sap.m" id="idPPExtView" 
+xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt" xmlns:ce="sap.ui.codeeditor">
     <Dialog id="idLLMActionsDialog" title="Enter information related to actions that you want to generate" 
         class="sapUiResponsiveContentPadding" beforeOpen=".onBeforeOpen" afterClose=".onAfterClose"
         contentHeight="90%" contentWidth="80%" xmlns:f="sap.f">
         <content>
-            <TextArea id="idTextArea" rows="4" width="100%">
-
-            </TextArea>
-            <Button id="idLLMActionsButton" text="Get Actions From LLM" press=".onGetActionsFromLLM" type="Emphasized" enabled="true" />
+            <TextArea id="idTextArea" rows="4" width="100%" growing="true"></TextArea>
+            <Button id="idLLMActionsButton" text="Get Actions From LLM" press=".onGetActionsFromLLM" type="Emphasized" enabled="true"/>
             <VBox id="idTopicVBox" height="100%">
-                <!-- <TextArea id="idTextArea" rows="4" width="100%">
-
-                </TextArea>
-                <Button id="idLLMActionsButton" text="Get Actions From LLM" press=".onGetActionsFromLLM" type="Emphasized" enabled="true" /> -->
-                <f:FlexibleColumnLayout
-                    id="flexibleColumnLayout"
-                    stateChange=".onStateChanged"
-                    backgroundDesign="Solid"
-                    layout="{/layout}" visible="true" >
+                <f:FlexibleColumnLayout id="flexibleColumnLayout" stateChange=".onStateChanged" backgroundDesign="Solid" visible="true" >
                     <f:beginColumnPages>
                         <f:DynamicPage id="dynamicPageBegin" toggleHeaderOnTitleClick="false" visible="false" fitContent="true">
                             <f:title>
                                 <f:DynamicPageTitle id="_IDGenDynamicPageTitle1">
                                     <f:heading>
-                                        <Title id="_IDGenTitle1" text="Actions Suggested by LLM"/>
+                                        <Title id="_IDGenTitle1" text="Actions Suggested by LLM" class="boldText"/>
                                     </f:heading>
                                 </f:DynamicPageTitle>
                             </f:title>
@@ -93,8 +84,9 @@
                                         </VBox>
                                     </HBox>    
                                     <VBox id="_IDGenVBox7" class="sapUiSmallMarginBeginEnd" width="100%">
-                                        <Label id="_IDGenLabel5" text="Payload"></Label>                                                                        
-                                        <TextArea id="idTextAreaEdit" rows="15" width="100%" value="{LLMItem>/Action/Action_Payload}" enabled="true" editable="true" valueState="Information" valueStateText="Should be a valid JSON!!"></TextArea>
+                                        <Label id="_IDGenLabel5" text="Payload"></Label>   
+                                        <ce:CodeEditor id="_IDGenCodeEditor1" type="json" value="{LLMItem>/Action/Action_Payload}" lineNumbers="true" syntaxHints="true" height="300px"></ce:CodeEditor>                                                                    
+                                        <!-- <TextArea id="idTextAreaEdit" rows="15" width="100%" value="{LLMItem>/Action/Action_Payload}" enabled="true" editable="true" valueState="Information" valueStateText="Should be a valid JSON!!"></TextArea> -->
                                     </VBox>
                                         <!-- <Input id="_IDGenInput1" value="{LLMItem>/Action/Action_Payload}" editable="true" valueState="Success" ></Input> -->
                                         <!-- <Text id="_IDGenTextDI5" text="{LLMItem>/Action/Action_Payload}" class="sapUiSmallMarginBottom"/> -->

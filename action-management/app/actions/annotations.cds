@@ -19,6 +19,16 @@ annotate service.Actions @(
     }
 );
 
+// annotate service.createActions @(
+//     cds.odata.bindingparameter.name : '_it',
+//         cds.odata.bindingparameter.collection,
+//         Common.SideEffects              : {
+//             TargetEntities : [_it]
+//         }
+// ) ;
+
+
+
 
 annotate service.Actions with @(Common.SemanticKey : [ID]);
 annotate service.prepostActions with @(Common.SemanticKey : [ID]);
@@ -455,16 +465,6 @@ annotate service.Actions with @(
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'Payload',
-                Value : payload,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Field description from LLM',
-                Value : apidescription,
-            },
-            {
-                $Type : 'UI.DataField',
                 Value : defaultActionIdPath,
                 Label : 'Action Id Path in Response',
                 ![@UI.Hidden] : hideDefaultActionIdPath
@@ -473,6 +473,16 @@ annotate service.Actions with @(
                 $Type : 'UI.DataField',
                 Value : isCsrfTokenNeeded,
                 Label : 'Is Csrf Token Needed?',
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Payload',
+                Value : payload,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Field description from LLM',
+                Value : apidescription,
             },],
     }
 );

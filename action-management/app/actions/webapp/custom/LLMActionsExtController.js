@@ -55,11 +55,12 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
                 // debugger;
                 let LLMItem = oEvent.getSource().getModel("LLM").getData().Actions[index];
                 LLMItem = JSON.parse(JSON.stringify(LLMItem));
-                LLMItem.Action_Payload = JSON.stringify(LLMItem.Action_Payload)
+                LLMItem.Action_Payload = JSON.stringify(LLMItem.Action_Payload, null, "\t")
                 let oLLMItemModel = new JSONModel({Action: LLMItem});
                 this.detailPage.setModel(oLLMItemModel, "LLMItem");
                 // var oFCL = this.oView.getParent().getParent();
                 // oFCL.setLayout(fioriLibrary.LayoutType.TwoColumnsMidExpanded);
+                // this.detailPage.getAggregation("content").getAggregation("items")[2].getAggregation("items")[1].prettyPrint()
             },
 
             onGetActionsFromLLM: function(oEvent) {
@@ -80,8 +81,9 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
                 this.fcl = oVBox.getAggregation("content")[2].getAggregation("items")[0]
                 this.beginPage = this.fcl.getAggregation("beginColumnPages")[0];
                 this.detailPage = this.fcl.getAggregation("midColumnPages")[0];
+                this.oDialog = oVBox;
                 var that = this;
-
+                this.oDialog.setBusy(true);
                 oOperation.setParameter("userInput", userInputForLLM).execute().then(function(event){
                     let oResults = oOperation.getBoundContext().getObject();
                     //let oTopicModel = new JSONModel({value:oResults.value, error_visible:false});
@@ -100,6 +102,7 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
                     let oLLMModel = new JSONModel({Actions: aActionsList});
                     that.beginPage.setModel(oLLMModel, "LLM");
                     that.beginPage.setVisible(true);
+                    that.oDialog.setBusy(false);
                     console.log(that);
                 }).catch(function(error){
                     let oErrors = new JSONModel({value:[], error_visible: true, error_message:error.message});
@@ -120,6 +123,8 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
                 let oDummyVBox = oDialog1.getAggregation("content")[4];
                 const actionsInput = llmResponse;
                 let oOperation = oDummyVBox.getObjectBinding();
+                var that = this;
+                this.oDialog.setBusy(true);
                 oOperation.setParameter("actionsInput", actionsInput).execute().then(function(event){
                     let oResults = oOperation.getBoundContext().getObject();
                     //let oTopicModel = new JSONModel({value:oResults.value, error_visible:false});
@@ -128,6 +133,7 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
                     console.log(oResults);
                     oExtensionAPI.refresh();
                     MessageBox.success("Chain of actions are created successfully. Please check the actions and update information.");
+                    that.oDialog.setBusy(false);
                     oUploadDialog && oUploadDialog.close();
                 }).catch(function(error){
                     let oErrors = new JSONModel({value:[], error_visible: true, error_message:error.message});
