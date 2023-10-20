@@ -232,14 +232,6 @@
                                                 "textMaxCharactersDisplay": "500",
                                                 "textExpandBehaviorDisplay" : "Popover"
                                             }
-                                        },
-                                        "DataField::apidescription": {
-                                            "formatOptions": {                                         
-                                                "textLinesEdit": "10",
-                                                "textMaxLines": "10",
-                                                "textMaxCharactersDisplay": "500",
-                                                "textExpandBehaviorDisplay" : "Popover"
-                                            }
                                         }
                                     }
                                 },

@@ -84,12 +84,6 @@ annotate service.Actions with @(UI.LineItem : [
         Value : payload,
         Label : 'Payload',
         ![@UI.Importance] : #Low,
-    },
-    {
-        $Type : 'UI.DataField',
-        Value : apidescription,
-        Label : 'Field Description From LLM',
-        ![@UI.Importance] : #Low,
     }
 
 ]);
@@ -270,10 +264,6 @@ annotate service.Actions with {
 
 annotate service.Actions with {
     payload @UI.MultiLineText : true
-};
-
-annotate service.Actions with {
-    apidescription @UI.MultiLineText : true
 };
 
 annotate service.Actions with @(UI.Identification : []);
@@ -479,11 +469,7 @@ annotate service.Actions with @(
                 Label : 'Payload',
                 Value : payload,
             },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Field description from LLM',
-                Value : apidescription,
-            },],
+        ],
     }
 );
 annotate service.Actions with {

@@ -7,7 +7,7 @@ const { setTimeout } = require("timers/promises");
 
 module.exports = cds.service.impl(async function (srv) {
 
-    const { Destinations, Actions, Types, LogStatuses, prepostActions } = this.entities;
+    const { Destinations, Actions, Methods, Types, LogStatuses, prepostActions } = this.entities;
 
     srv.on('READ', Destinations, async (req) => {
         try {
@@ -103,7 +103,7 @@ module.exports = cds.service.impl(async function (srv) {
                 console.log('user input: '+userInput);
                 console.log("------------------Start of generating topic suggestions-------");
                 //const response = await llmUtil.callLLMService(userInput);
-                await setTimeout(5 * 1000);
+                //await setTimeout(5 * 1000);
                 const response = {
                     "MAIN": {
                         "Action_Payload": {
@@ -188,13 +188,14 @@ module.exports = cds.service.impl(async function (srv) {
     //method to create action and return action id
     async function createAction(action, actionType, actionId){
         //post id 4eaa8eda-1329-4cb8-8d19-174c2e06cd3f get this dymanically and use for creation
-        const methodId = "4eaa8eda-1329-4cb8-8d19-174c2e06cd3f"
+        const methodUpperCase = action["Action_Type"].toUpperCase();
+        let methodDetails = await SELECT.one.from(Methods).where(({ name: methodUpperCase }))
         const response = await INSERT.into(Actions).entries({
             "ID": actionId,
             "name": action["Suggested_Action_Name"],
-            "descr": "This action is created using LLM "+action["Suggested_Action_Name"],
+            "descr": "This action is created using LLM "+action["Field_Description"],
             "path": action["Relative_Path"],
-            "method_ID": methodId,
+            "method_ID": methodDetails["ID"],
             "payload": JSON.stringify(action.Action_Payload),
             "type_ID":"809e3149-0e99-4cb3-8119-a2e840284e88",
             "contentType_id": "JSON",
