@@ -6,7 +6,7 @@ xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt" xmlns:ce="sap.ui.codeeditor">
         <content>
             <TextArea id="idTextArea" rows="4" width="100%" growing="true"></TextArea>
             <Button id="idLLMActionsButton" text="Get Actions From LLM" press=".onGetActionsFromLLM" type="Emphasized" enabled="true"/>
-            <VBox id="idTopicVBox" height="100%">
+            <VBox id="idTopicVBox" height="100%" visible="false">
                 <f:FlexibleColumnLayout id="flexibleColumnLayout" stateChange=".onStateChanged" backgroundDesign="Solid" visible="true" >
                     <f:beginColumnPages>
                         <f:DynamicPage id="dynamicPageBegin" toggleHeaderOnTitleClick="false" visible="false" fitContent="true">
@@ -37,11 +37,13 @@ xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt" xmlns:ce="sap.ui.codeeditor">
                                         <items>
                                             <ColumnListItem id="_IDGenColumnListItem1" type="Navigation" press=".onListItemPress">
                                                 <cells>
-                                                    <Title id="_IDGenTextC1" level="H6" titleStyle="H6" text="{LLM>Suggested_Action_Name}"/>
+                                                    
+                                                    <Title id="idtitlec1" level="H6" titleStyle="H6" text="{LLM>Suggested_Action_Name}"/>
                                                     <Text id="_IDGenTextC2" text="{LLM>Field_Description}"/>
-                                                    <!-- <Text id="_IDGenTextC3" text="{LLM>Action_Type}"/> -->
+                                                    
                                                     <tnt:InfoLabel id="il7" text="{LLM>Action_Type}" colorScheme="7" />
                                                     <Text id="_IDGenTextC4" text="{LLM>Relative_Path}"/>
+                                                
                                                 </cells>
                                             </ColumnListItem>
                                         </items>
@@ -96,7 +98,7 @@ xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt" xmlns:ce="sap.ui.codeeditor">
                     </f:midColumnPages>
                 </f:FlexibleColumnLayout>
             </VBox>
-            <VBox id="idActionsHBox" binding="{/getActionSuggestionsFromLLM1(...)}"  width="100%">
+            <VBox id="idActionsHBox" binding="{/getActionSuggestionsFromLLM1(...)}"  width="100%" visible="false">
                 <TextArea id="idTextAreaActions" rows="10" width="100%" visible="false">
                 </TextArea>
             </VBox>

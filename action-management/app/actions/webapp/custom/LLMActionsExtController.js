@@ -66,33 +66,26 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
             onGetActionsFromLLM: function(oEvent) {
                 // let oVBox = oEvent.getSource().getParent();
                 // let oTextAreaInput = oVBox.getAggregation("items")[0];
-                let oVBox = oEvent.getSource().getParent();
-                let oTextAreaInput = oVBox.getAggregation("content")[0];
+                let oDialog1 = oEvent.getSource().getParent();
+                let oTextAreaInput = oDialog1.getAggregation("content")[0];
                 const userInputForLLM = oTextAreaInput.getValue();
                 console.log(userInputForLLM);
 
                 //call llm and get suggested actions
-                let oDialog1 = oVBox.getParent();
-                // let oHBox = oDialog1.getAggregation("content")[1];
-                let oHBox = oVBox.getAggregation("content")[3];
+                let oHBox = oDialog1.getAggregation("content")[3];
                 let oOperation = oHBox.getObjectBinding();
 
                 // this.fcl = oDialog1.getAggregation("content")[0].getAggregation("items")[2]
-                this.fcl = oVBox.getAggregation("content")[2].getAggregation("items")[0]
+                this.fcl = oDialog1.getAggregation("content")[2].getAggregation("items")[0]
                 this.beginPage = this.fcl.getAggregation("beginColumnPages")[0];
                 this.detailPage = this.fcl.getAggregation("midColumnPages")[0];
-                this.oDialog = oVBox;
+                this.oDialog = oDialog1;
                 var that = this;
                 this.oDialog.setBusy(true);
                 oOperation.setParameter("userInput", userInputForLLM).execute().then(function(event){
                     let oResults = oOperation.getBoundContext().getObject();
-                    //let oTopicModel = new JSONModel({value:oResults.value, error_visible:false});
-                    //oTable.setModel(oTopicModel, "topicsuggestions");
-                    //oTable.setBusyIndicatorDelay(0).setBusy(false);
-                    let idTextAreaActions = oHBox.getAggregation("items")[0];
-                    idTextAreaActions.setValue(oResults.value);
-                    idTextAreaActions.setVisible(false);
                     console.log(oResults);
+                    oDialog1.getAggregation("content")[2].setVisible(true);
                     //update this
                     llmResponse = oResults.value;
                     let aActionsList=[], result= JSON.parse(oResults.value);
@@ -134,21 +127,25 @@ function (MessageBox, MessageToast, JSONModel, fioriLibrary){
                     oExtensionAPI.refresh();
                     MessageBox.success("Sequence of chained actions for the proposed tasks got created successfully, do update the system/destination information to make it operational");
                     that.oDialog.setBusy(false);
-                    oUploadDialog && oUploadDialog.close();
+                    that.onClose();
+                    //oUploadDialog && oUploadDialog.close();
                 }).catch(function(error){
                     let oErrors = new JSONModel({value:[], error_visible: true, error_message:error.message});
                     console.log(oErrors);
-                    oUploadDialog && oUploadDialog.close();
+                    that.onClose();
                 })
                 
             },
             onClose: function(oEvent) {
                 oUploadDialog && oUploadDialog.close();
-            },
-            onAfterClose: function (oEvent) {
                 oExtensionAPI.removeDependent(oUploadDialog);
                 oUploadDialog.destroy();
                 oUploadDialog = undefined;
+            },
+            onAfterClose: function (oEvent) {
+                oExtensionAPI.removeDependent(oUploadDialog);
+                //oUploadDialog.destroy();
+                //oUploadDialog = undefined;
             }
         };
     }
