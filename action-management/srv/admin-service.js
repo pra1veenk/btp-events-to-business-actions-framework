@@ -103,80 +103,68 @@ module.exports = cds.service.impl(async function (srv) {
                 console.log('user input: '+userInput);
                 console.log("------------------Start of generating topic suggestions-------");
                 //const response = await llmUtil.callLLMService(userInput);
-                //await setTimeout(5 * 1000);
+                await setTimeout(5 * 1000);
                 const response = {
                     "MAIN": {
+                        "API_Description": "Create Purchase Requisition for pump material",
                         "Action_Payload": {
-                            "DeliveryDate": "date",
-                            "Material": "string",
+                            "PurReqnDescription": "string",
+                            "PurReqnDoOnlyValidation": "string",
                             "PurchaseRequisition": "string",
-                            "PurchaseRequisitionItem": "string",
-                            "RequestedQuantity": "number"
+                            "PurchaseRequisitionType": "string",
+                            "SourceDetermination": "string",
+                            "to_PurchaseReqnItem": [
+                                {
+                                    "PurchaseRequisitionItem": "string",
+                                    "PurchaseRequisitionItemPrice": "number",
+                                    "PurchaseRequisitionItemQuantity": "number",
+                                    "PurchaseRequisitionItemText": "string",
+                                    "PurchaseRequisitionItemType": "string"
+                                }
+                            ]
                         },
                         "Action_Type": "POST",
-                        "Field_Description": "This action creates a purchase requisition for a specific material. The purchase requisition number, item number, material, requested quantity, and delivery date are required fields.",
-                        "Relative_Path": "/A_PurchaseRequisitionItem",
-                        "Suggested_Action_Name": "CreatePurchaseRequisitionForPumpMaterial"
+                        "Relative_Path": "/A_PurchaseRequisitionHeader",
+                        "Suggested_Action_Name": "Create Purchase Requisition",
+                        "Action_Category":"Main-Action"
                     },
                     "POST": {
+                        "API_Description": "Send the created purchase requisition ID to Azure device",
                         "Action_Payload": {
-                            "AccountAssignmentCategory": "<account assignment category>",
-                            "AccountAssignmentNumber": "<account assignment number>",
-                            "AccountAssignmentType": "<account assignment type>",
-                            "PurchaseRequisition": "<purchase requisition number>",
-                            "PurchaseRequisitionItem": "<item number>"
+                            "AccountAssignmentDistributionIndicator": "<indicator>",
+                            "GoodsRecipient": "<recipient>",
+                            "GrInProcess": "<gr_in_process>",
+                            "InvoiceIsGoodsReceiptBased": "<invoice_based>",
+                            "PurchaseRequisition": "<purchase_requisition_number>",
+                            "PurchaseRequisitionItem": "<item_number>",
+                            "SerialNumber": "<serial_number>",
+                            "UnplannedDeliveryCosts": "<cost>"
                         },
-                        "Action_Type": "POST",
-                        "Field_Description": "Updates the account assignment details of a particular accounting line of an item in a purchase requisition, using the purchase requisition number, item number, and serial number of the accounting line provided.",
-                        "Relative_Path": "/A_PurchaseRequisitionHeader('<PurchaseRequisition>')/to_PurchaseReqnItem",
-                        "Suggested_Action_Name": "UpdateAccountAssignmentDetails"
+                        "Action_Type": "PATCH",
+                        "Action_Category":"Post-Action",
+                        "Relative_Path": "/A_PurReqnAcctAssgmtType('<purchase_requisition_number>')",
+                        "Suggested_Action_Name": "Send Purchase Requisition ID"
                     },
                     "PRE": {
+                        "API_Description": "Get Material details from Material Master",
                         "Action_Payload": {
-                            "AssemblyScrapPercent": 10,
-                            "BaseUnit": "Unit1",
-                            "Currency": "USD",
-                            "DfltStorageLocationExtProcmt": "Location1",
-                            "FixedLotSizeQuantity": 10,
-                            "IsMRPDependentRqmt": true,
-                            "IsMarkedForDeletion": false,
-                            "IsPlannedDeliveryTime": true,
-                            "IsSafetyTime": true,
-                            "IsStorageCosts": true,
-                            "LotSizeIndependentCosts": 10,
-                            "LotSizeRoundingQuantity": 10,
-                            "LotSizingProcedure": "Procedure1",
-                            "MRPArea": "Area1",
-                            "MRPGroup": "Group1",
-                            "MRPPlanningCalendar": "Calendar1",
-                            "MRPResponsible": "Responsible1",
-                            "MRPType": "Type1",
-                            "MaximumLotSizeQuantity": 10,
-                            "MaximumStockQuantity": 10,
-                            "MinimumLotSizeQuantity": 10,
-                            "PerdPrflForSftyTme": "Profile1",
-                            "PlanAndOrderDayDetermination": "Determination1",
-                            "PlannedDeliveryDurationInDays": 10,
-                            "PlanningTimeFence": 10,
-                            "Plant": "Plant1",
-                            "ProcurementSubType": "SubType1",
-                            "Product": "Pump Material",
-                            "RangeOfCvrgPrflCode": "Code1",
-                            "ReorderThresholdQuantity": 10,
-                            "RoundingProfile": "Profile1",
-                            "RqmtQtyRcptTaktTmeInWrkgDays": 10,
-                            "SafetyDuration": 10,
-                            "SafetyStockQuantity": 10,
-                            "SrvcLvl": 10,
-                            "StorageLocation": "Location1"
+                            "Batch": "string",
+                            "CharcInternalID": "string",
+                            "ConfirmationCount": "string",
+                            "ConfirmationGroup": "string",
+                            "Material": "string",
+                            "MaterialDocument": "string",
+                            "MaterialDocumentItem": "string",
+                            "MaterialDocumentYear": "string",
+                            "Plant": "string"
                         },
-                        "Action_Type": "POST",
-                        "Field_Description": "Fetches MRP area data of a product master record by product number, plant and MRP area",
-                        "Relative_Path": "/A_ProductPlantMRPArea(Product='Pump Material',Plant='Plant1',MRPArea='Area1')",
-                        "Suggested_Action_Name": "Fetch_MRP_Area_Data"
+                        "Action_Type": "GET",
+                        "Action_Category":"Pre-Action",
+                        "Relative_Path": "/A_ProductPlant(Product='{Product}',Plant='{Plant}')/to_StorageLocation",
+                        "Suggested_Action_Name": "Get Material details"
                     }
                 }
-                    
+                   
                 console.log("------------------End of generating topic suggestions------- response is : "+response);
                 return JSON.stringify(response);
         } catch(err){
@@ -193,7 +181,7 @@ module.exports = cds.service.impl(async function (srv) {
         const response = await INSERT.into(Actions).entries({
             "ID": actionId,
             "name": action["Suggested_Action_Name"],
-            "descr": "This action is created using LLM "+action["Field_Description"],
+            "descr": "This action is created using LLM "+action["API_Description"],
             "path": action["Relative_Path"],
             "method_ID": methodDetails["ID"],
             "payload": JSON.stringify(action.Action_Payload),
@@ -201,7 +189,7 @@ module.exports = cds.service.impl(async function (srv) {
             "contentType_id": "JSON",
             "actionCategory_id": actionType,
             "isCsrfTokenNeeded": true,
-            "apidescription": action["Field_Description"],
+            "apidescription": action["API_Description"],
             "dest":""
         });
         console.log(response);

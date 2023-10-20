@@ -2,14 +2,14 @@
 xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt" xmlns:ce="sap.ui.codeeditor">
     <Dialog id="idLLMActionsDialog" title="Enter information related to actions that you want to generate" 
         class="sapUiResponsiveContentPadding" beforeOpen=".onBeforeOpen" afterClose=".onAfterClose"
-        contentHeight="90%" contentWidth="80%" xmlns:f="sap.f">
+        contentHeight="750px" contentWidth="80%" xmlns:f="sap.f">
         <content>
             <TextArea id="idTextArea" rows="4" width="100%" growing="true"></TextArea>
             <Button id="idLLMActionsButton" text="Get Actions From LLM" press=".onGetActionsFromLLM" type="Emphasized" enabled="true"/>
-            <VBox id="idTopicVBox" height="100%" visible="false">
+            <VBox id="idTopicVBox" height="500px" visible="false">
                 <f:FlexibleColumnLayout id="flexibleColumnLayout" stateChange=".onStateChanged" backgroundDesign="Solid" visible="true" >
                     <f:beginColumnPages>
-                        <f:DynamicPage id="dynamicPageBegin" toggleHeaderOnTitleClick="false" visible="false" fitContent="true">
+                        <f:DynamicPage id="dynamicPageBegin" toggleHeaderOnTitleClick="false" visible="true" fitContent="true">
                             <f:title>
                                 <f:DynamicPageTitle id="_IDGenDynamicPageTitle1">
                                     <f:heading>
@@ -21,16 +21,19 @@ xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt" xmlns:ce="sap.ui.codeeditor">
                                 <VBox id="_IDGenVBox1" fitContainer="true">
                                     <Table id="actionsTable" class="sapFDynamicPageAlignContent" width="auto" inset="false" items="{LLM>/Actions}">
                                         <columns>
-                                            <Column id="_IDGenColumn1" width="25%">
+                                            <Column id="_IDGenColumn1" width="20%">
                                                 <Text id="_IDGenText1" text="Suggested Action Name"/>
                                             </Column>
-                                            <Column id="_IDGenColumn2" width="35%" minScreenWidth="Tablet">
+                                            <Column id="_IDGenColumn2" width="30%" minScreenWidth="Tablet">
                                                 <Text id="_IDGenText2" text="Description"/>
                                             </Column>
                                             <Column id="_IDGenColumn3" width="15%" minScreenWidth="Tablet">
-                                                <Text id="_IDGenText3" text="Action Type"/>                                                
+                                                <Text id="_IDGenText3" text="Action Category"/>                                                
                                             </Column>
-                                            <Column id="_IDGenColumn4" width="25%" minScreenWidth="Tablet">
+                                            <Column id="_IDGenColumn5" width="15%" minScreenWidth="Tablet">
+                                                <Text id="_IDGenText5" text="Request Method"/>                                                
+                                            </Column>
+                                            <Column id="_IDGenColumn4" width="20%" minScreenWidth="Tablet">
                                                 <Text id="_IDGenText4" text="API Path"/>
                                             </Column>
                                         </columns>
@@ -39,8 +42,8 @@ xmlns:mvc="sap.ui.core.mvc" xmlns:tnt="sap.tnt" xmlns:ce="sap.ui.codeeditor">
                                                 <cells>
                                                     
                                                     <Title id="idtitlec1" level="H6" titleStyle="H6" text="{LLM>Suggested_Action_Name}"/>
-                                                    <Text id="_IDGenTextC2" text="{LLM>Field_Description}"/>
-                                                    
+                                                    <Text id="_IDGenTextC2" text="{LLM>API_Description}"/>
+                                                    <Text id="_IDGenTextC3" text="{LLM>Action_Category}"/>
                                                     <tnt:InfoLabel id="il7" text="{LLM>Action_Type}" colorScheme="7" />
                                                     <Text id="_IDGenTextC4" text="{LLM>Relative_Path}"/>
                                                 
